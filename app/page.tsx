@@ -58,6 +58,10 @@ export default function Home() {
           </button>
         </form>
 
+        <button type="button" onClick={() => window.location.href = '/api/docusign/auth/login'} disabled={loading} style={{ width: '100%', marginTop: '1rem', backgroundColor: loading ? '#a0aec0' : '#38a169', color: '#ffffff', border: 'none', padding: '0.75rem', borderRadius: '4px', fontSize: '1rem', fontWeight: 'bold', cursor: loading ? 'not-allowed' : 'pointer', transition: 'background-color 0.2s' }}>
+          {loading ? 'Processing Pipeline...' : 'Connect Docusign & Send Envelope'}
+        </button>
+
         {result && (
           <div style={{ marginTop: '1.5rem', padding: '1rem', borderRadius: '4px', fontSize: '0.9rem', backgroundColor: result.success ? '#f0fff4' : '#fff5f5', border: `1px solid ${result.success ? '#c6f6d5' : '#fed7d7'}`, color: result.success ? '#22543d' : '#742a2a', wordBreak: 'break-word' }}>
             {result.message}
