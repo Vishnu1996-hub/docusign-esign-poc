@@ -27,10 +27,11 @@ export async function POST(req: NextRequest) {
     const result = await sendEnvelope(body);
 
     return NextResponse.json(result);
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : 'Failed to send envelope';
     return NextResponse.json(
       {
-        error: error.message || 'Failed to send envelope',
+        error: errorMessage,
       },
       { status: 500 }
     );

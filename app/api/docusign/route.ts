@@ -76,10 +76,11 @@ export async function POST(req: NextRequest) {
     const response = await envelopesApi.createEnvelope(accountId, { envelopeDefinition: envelope });
 
     return NextResponse.json({ success: true, envelopeId: response.envelopeId });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : 'Internal pipeline processing failure.';
     console.error('Server side capture exception caught:', error);
     return NextResponse.json(
-      { error: error.message || 'Internal pipeline processing failure.' },
+      { error: errorMessage },
       { status: 500 }
     );
   }

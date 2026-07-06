@@ -48,8 +48,8 @@ export async function getDocusignClient(): Promise<DocusignSession> {
     const configuredAccountId = process.env.DOCUSIGN_ACCOUNT_ID;
     const account =
       (configuredAccountId &&
-        userInfo.accounts.find((acc: any) => acc.accountId === configuredAccountId)) ||
-      userInfo.accounts.find((acc: any) => acc.isDefault === 'true') ||
+        userInfo.accounts.find((acc: { accountId: string }) => acc.accountId === configuredAccountId)) ||
+      userInfo.accounts.find((acc: { isDefault: string }) => acc.isDefault === 'true') ||
       userInfo.accounts[0];
 
     if (!account) {
@@ -59,13 +59,13 @@ export async function getDocusignClient(): Promise<DocusignSession> {
     apiClient.setBasePath(`${account.baseUri}/restapi`);
 
     return { apiClient, accountId: account.accountId };
-    } catch (error: any) {
+    } catch (error: unknown) {
     console.error('\n❌ ===== RAW DOCUSIGN AUTH ERROR PACKET =====');
 
     // The JWT token request is made with a plain axios call under the hood, so on
     // failure the DocuSign error JSON lives at error.response.data (axios' native
     // shape), not error.response.body (that alias is only added on the success path).
-    const docusignErrorBody = error.response?.data ?? error.response?.body;
+    const docusignErrorBody = (error as { response?: { data?: unknown; body?: unknown } }).response?.data ?? (error as { response?: { data?: unknown; body?: unknown } }).response?.body;
 
     if (docusignErrorBody) {
       console.error('Error Body:', JSON.stringify(docusignErrorBody, null, 2));
@@ -75,9 +75,9 @@ export async function getDocusignClient(): Promise<DocusignSession> {
     console.error('=============================================\n');
 
     // Extract the exact error message string to show on your screen
-    const exactMessage = docusignErrorBody?.error_description ||
-                         docusignErrorBody?.error ||
-                         error.message;
+    const exactMessage = (docusignErrorBody as { error_description?: string })?.error_description ||
+                         (docusignErrorBody as { error?: string })?.error ||
+                         (error as { message?: string })?.message;
 
     throw new Error(`Docusign Identity Server Refusal: ${exactMessage}`);
   }

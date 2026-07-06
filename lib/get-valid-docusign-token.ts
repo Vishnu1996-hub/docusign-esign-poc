@@ -1,5 +1,4 @@
 import { getDocusignSession } from '@/lib/docusign-session';
-import { refreshDocusignAccessToken } from '@/lib/docusign-token';
 
 export async function getValidDocusignToken() {
   try {

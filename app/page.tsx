@@ -6,6 +6,7 @@ export default function Home() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
+  const [authLoading, setAuthLoading] = useState(false);
   const [result, setResult] = useState<{ success: boolean; message: string } | null>(null);
 
   const handleTriggerEnvelope = async (e: React.FormEvent) => {
@@ -29,8 +30,9 @@ export default function Home() {
       } else {
         setResult({ success: false, message: data.error || 'Failed to dispatch document.' });
       }
-    } catch (err) {
-      setResult({ success: false, message: 'Network communication failure occurred.' });
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Network communication failure occurred.';
+      setResult({ success: false, message: errorMessage });
     } finally {
       setLoading(false);
     }
@@ -58,8 +60,11 @@ export default function Home() {
           </button>
         </form>
 
-        <button type="button" onClick={() => window.location.href = '/api/docusign/auth/login'} disabled={loading} style={{ width: '100%', marginTop: '1rem', backgroundColor: loading ? '#a0aec0' : '#38a169', color: '#ffffff', border: 'none', padding: '0.75rem', borderRadius: '4px', fontSize: '1rem', fontWeight: 'bold', cursor: loading ? 'not-allowed' : 'pointer', transition: 'background-color 0.2s' }}>
-          {loading ? 'Processing Pipeline...' : 'Connect Docusign & Send Envelope'}
+        <button type="button" onClick={() => {
+          setAuthLoading(true);
+          window.location.href = '/api/docusign/auth/login';
+        }} disabled={loading || authLoading} style={{ width: '100%', marginTop: '1rem', backgroundColor: authLoading ? '#a0aec0' : '#38a169', color: '#ffffff', border: 'none', padding: '0.75rem', borderRadius: '4px', fontSize: '1rem', fontWeight: 'bold', cursor: authLoading ? 'not-allowed' : 'pointer', transition: 'background-color 0.2s' }}>
+          {authLoading ? 'Connecting to Docusign...' : 'Connect Docusign & Send Envelope'}
         </button>
 
         {result && (

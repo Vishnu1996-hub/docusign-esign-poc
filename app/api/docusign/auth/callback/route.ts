@@ -88,7 +88,7 @@ export async function GET(req: NextRequest) {
     const userInfo = await getUserInfo(accessToken);
 
     const account =
-      userInfo.accounts.find((acc: any) => acc.isDefault === 'true') ||
+      userInfo.accounts.find((acc: { isDefault: string }) => acc.isDefault === 'true') ||
       userInfo.accounts[0];
 
     if (!account) {
@@ -143,7 +143,8 @@ export async function GET(req: NextRequest) {
     });
 
     return response;
-  } catch (e: any) {
-    return NextResponse.redirect(errorUrl(e.message || 'DocuSign callback failed'));
+  } catch (e: unknown) {
+    const errorMessage = e instanceof Error ? e.message : 'DocuSign callback failed';
+    return NextResponse.redirect(errorUrl(errorMessage));
   }
 }
