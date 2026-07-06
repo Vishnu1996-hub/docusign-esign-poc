@@ -56,7 +56,7 @@ export default function Home() {
           </div>
 
           <button type="submit" disabled={loading} style={{ width: '100%', backgroundColor: loading ? '#a0aec0' : '#3182ce', color: '#ffffff', border: 'none', padding: '0.75rem', borderRadius: '4px', fontSize: '1rem', fontWeight: 'bold', cursor: loading ? 'not-allowed' : 'pointer', transition: 'background-color 0.2s' }}>
-            {loading ? 'Processing Pipeline...' : 'Generate & Send Envelope'}
+            {loading ? 'Processing Pipeline...' : 'Generate & Send Envelope via JWT'}
           </button>
         </form>
 
@@ -64,7 +64,7 @@ export default function Home() {
           setAuthLoading(true);
           window.location.href = '/api/docusign/auth/login';
         }} disabled={loading || authLoading} style={{ width: '100%', marginTop: '1rem', backgroundColor: authLoading ? '#a0aec0' : '#38a169', color: '#ffffff', border: 'none', padding: '0.75rem', borderRadius: '4px', fontSize: '1rem', fontWeight: 'bold', cursor: authLoading ? 'not-allowed' : 'pointer', transition: 'background-color 0.2s' }}>
-          {authLoading ? 'Connecting to Docusign...' : 'Connect Docusign & Send Envelope'}
+          {authLoading ? 'Connecting to Docusign...' : 'Connect Docusign & Send Envelope via OAuth'}
         </button>
 
         {result && (
